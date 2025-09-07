@@ -20,6 +20,11 @@
 | Command | Description |
 |---------|------------|
 | `M about` | Know more about Mora Esport |
+| `M ping` | Check if bot is online |
+| `M kick @user` | Kick a user from server (Moderator only) |
+| `M ban @user` | Ban a user from server (Moderator only) |
+| `M mute @user` | Mute a user in server (Moderator only) |
+| `M unmute @user` | Unmute a user in server (Moderator only) |
 | `M tournament create` | Create a new tournament |
 | `M tournament join` | Join a tournament with team info |
 | `M tournament delete` | Delete a tournament |
@@ -30,10 +35,3 @@
 *(Prefix: `M`)*
 
 ---
-
-## 🔹 Setup Instructions
-
-1. **Clone the repo**
-```bash
-git clone https://github.com/iapravesh/mora.git
-cd mora
