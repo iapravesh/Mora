@@ -1,52 +1,59 @@
-const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js");
-require("dotenv").config();
+// ================= Mora Esport Bot =================
+// Author: Pravesh Singh Patel
+// GitHub: https://github.com/iapravesh/Mora
+// ================================================
 
+
+// index.js
+require("dotenv").config();
+const fs = require("fs");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
+
+const TOKEN = process.env.TOKEN;
+const PREFIX = "M"; // Fixed prefix
+
+// === Client Setup ===
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
-  ],
-  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
+  ]
 });
 
-// ✅ Bot Ready
-client.once("ready", () => {
-  console.log(`✅ Logged in as ${client.user.tag}`);
-});
+client.commands = new Collection();
 
-// 🎉 Welcome Message
-client.on("guildMemberAdd", (member) => {
-  const channel = member.guild.systemChannel;
-  if (channel) {
-    channel.send(`🎮 Welcome ${member.user.username} to **Mora Esport**! 💜`);
+// === Load Commands Dynamically ===
+fs.readdirSync("./commands").forEach(file => {
+  if (file.endsWith(".js")) {
+    const cmd = require(`./commands/${file}`);
+    client.commands.set(cmd.name, cmd);
   }
 });
 
-// 📢 Custom Commands
-client.on("messageCreate", async (message) => {
+// === When Bot is Ready ===
+client.once("ready", () => {
+  console.log(` Logged in as ${client.user.tag}`);
+});
+
+// === Message Listener ===
+client.on("messageCreate", (message) => {
   if (message.author.bot) return;
 
-  const prefix = "!";
-  if (!message.content.startsWith(prefix)) return;
+  if (message.content.startsWith(PREFIX)) {
+    const args = message.content.slice(PREFIX.length).trim().split(/ +/);
+    const commandName = args.shift().toLowerCase();
 
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
-  const command = args.shift().toLowerCase();
-
-  if (command === "scrim") {
-    message.reply("⚡ Next Scrim details will be announced on Discord & Instagram @esportmora!");
-  } else if (command === "tournament") {
-    message.reply("🏆 Tournament registrations open soon! Stay tuned.");
-  } else if (command === "socials") {
-    message.reply("📲 Follow us:\n- Instagram: @esportmora\n- YouTube: @moraesport\n- Discord: Join our community!");
-  } else if (command === "clear") {
-    if (!message.member.permissions.has("ManageMessages")) return message.reply("🚫 You don’t have permission!");
-    let count = parseInt(args[0]);
-    if (isNaN(count)) return message.reply("⚠️ Please enter number of messages to delete.");
-    await message.channel.bulkDelete(count, true);
-    message.channel.send(`🧹 Cleared ${count} messages!`);
+    if (client.commands.has(commandName)) {
+      try {
+        client.commands.get(commandName).execute(message, args);
+      } catch (err) {
+        console.error(err);
+        message.reply(" Error executing command!");
+      }
+    }
   }
 });
 
-client.login(process.env.TOKEN);
+// === Login Bot ===
+client.login(TOKEN);

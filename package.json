@@ -1,13 +1,33 @@
 {
-  "name": "mora-esport-bot",
+  "name": "mora",
   "version": "1.0.0",
-  "description": "Mora Esport Discord Bot",
+  "description": "Mora Esport official Discord bot — moderation, scrims, tournaments, and socials.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"No test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iapravesh/Mora.git"
+  },
+  "author": "Pravesh Singh Patel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iapravesh/Mora/issues"
+  },
+  "homepage": "https://mora.infy.uk",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.4.5",
+    "rss-parser": "^3.12.0",
+    "axios": "^1.7.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
